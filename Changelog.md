@@ -1,5 +1,9 @@
 ### 0.6.8 (unreleased)
 
+Important Bugfixes:
+ * Add callvalue check for implicit constructors.
+
+
 Language Features:
 
 
