@@ -188,5 +188,32 @@ string solidity::util::formatAsStringOrNumber(string const& _value)
 		if (c <= 0x1f || c >= 0x7f || c == '"')
 			return "0x" + h256(_value, h256::AlignLeft).hex();
 
-	return "\"" + _value + "\"";
+	return escapeAndQuoteString(_value);
+}
+
+
+string solidity::util::escapeAndQuoteString(string const& _input)
+{
+	std::string output = "\"" + _input + "\"";
+
+	for (string::iterator it = output.begin(); it != output.end(); it++)
+		if (
+			(*it == '"' && it != output.begin() && it != output.end() - 1)
+			|| *it == '\\'
+			|| *it == '\b'
+			|| *it == '\f'
+			|| *it == '\n'
+			|| *it == '\r'
+			|| *it == '\t'
+			|| *it == '\v'
+		)
+			it = ++output.insert(it, '\\');
+		else if (!isprint(*it, locale::classic()))
+		{
+			ostringstream o;
+			o << "\\x" << std::hex << setfill('0') << setw(2) << (unsigned)(unsigned char)(*it);
+			it = ++output.insert(it, o.str().begin(), o.str().end());
+		}
+
+	return output;
 }

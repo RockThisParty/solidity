@@ -13,6 +13,9 @@ Bugfixes:
  * Type Checker: Disallow accessing ``runtimeCode`` for contract types that contain immutable state variables.
  * Fixed an "Assembly Exception in Bytecode" error where requested functions were generated twice.
 
+Important Bugfixes:
+ * Fixed that string literals passed to internal functions where not properly escaped when the ABIEncoderV2 was active.
+
 
 
 ### 0.6.7 (2020-05-04)
