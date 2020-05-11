@@ -308,7 +308,7 @@ smt::Expression SymbolicArrayVariable::valueAtIndex(int _index) const
 	return m_pair.valueAtIndex(_index);
 }
 
-smt::Expression SymbolicArrayVariable::array()
+smt::Expression SymbolicArrayVariable::elements()
 {
 	return m_pair.component(0);
 }

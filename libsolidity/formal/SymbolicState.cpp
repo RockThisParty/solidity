@@ -47,7 +47,7 @@ Expression SymbolicState::balance()
 
 Expression SymbolicState::balance(Expression _address)
 {
-	return Expression::select(m_balances.array(), move(_address));
+	return Expression::select(m_balances.elements(), move(_address));
 }
 
 void SymbolicState::transfer(Expression _from, Expression _to, Expression _value)
@@ -72,13 +72,13 @@ void SymbolicState::transfer(Expression _from, Expression _to, Expression _value
 void SymbolicState::addBalance(Expression _address, Expression _value)
 {
 	auto newBalances = Expression::store(
-		m_balances.array(),
+		m_balances.elements(),
 		_address,
 		balance(_address) + move(_value)
 	);
 	auto oldLength = m_balances.length();
 	m_balances.increaseIndex();
-	m_context.addAssertion(m_balances.array() == newBalances);
+	m_context.addAssertion(m_balances.elements() == newBalances);
 	m_context.addAssertion(m_balances.length() == oldLength);
 }
 

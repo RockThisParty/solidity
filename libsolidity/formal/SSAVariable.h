@@ -40,12 +40,12 @@ public:
 
 	unsigned operator++()
 	{
-		return m_currentIndex = (*m_nextFreeIndex)++;
+		return m_currentIndex = m_nextFreeIndex++;
 	}
 
 private:
 	unsigned m_currentIndex;
-	std::unique_ptr<unsigned> m_nextFreeIndex;
+	unsigned m_nextFreeIndex;
 };
 
 }

@@ -254,7 +254,7 @@ public:
 	Expression resetIndex() override { SymbolicVariable::resetIndex(); return m_pair.resetIndex(); }
 	Expression setIndex(unsigned _index) override { SymbolicVariable::setIndex(_index); return m_pair.setIndex(_index); }
 	Expression increaseIndex() override { SymbolicVariable::increaseIndex(); return m_pair.increaseIndex(); }
-	Expression array();
+	Expression elements();
 	Expression length();
 
 	SortPointer tupleSort() { return m_pair.sort(); }

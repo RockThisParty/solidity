@@ -963,7 +963,7 @@ void SMTEncoder::endVisit(IndexAccess const& _indexAccess)
 	auto arrayVar = dynamic_pointer_cast<smt::SymbolicArrayVariable>(array);
 	solAssert(arrayVar, "");
 	defineExpr(_indexAccess, smt::Expression::select(
-		arrayVar->array(),
+		arrayVar->elements(),
 		expr(*_indexAccess.indexExpression())
 	));
 	setSymbolicUnknownValue(
@@ -1037,18 +1037,18 @@ void SMTEncoder::arrayIndexAssignment(Expression const& _expr, smt::Expression c
 
 			auto symbArray = dynamic_pointer_cast<smt::SymbolicArrayVariable>(m_context.variable(*varDecl));
 			smt::Expression store = smt::Expression::store(
-				symbArray->array(),
+				symbArray->elements(),
 				expr(*indexAccess->indexExpression()),
 				toStore
 			);
 			auto oldLength = symbArray->length();
 			symbArray->increaseIndex();
-			m_context.addAssertion(symbArray->array() == store);
+			m_context.addAssertion(symbArray->elements() == store);
 			m_context.addAssertion(symbArray->length() == oldLength);
 			// Update the SMT select value after the assignment,
 			// necessary for sound models.
 			defineExpr(*indexAccess, smt::Expression::select(
-				symbArray->array(),
+				symbArray->elements(),
 				expr(*indexAccess->indexExpression())
 			));
 
@@ -1060,7 +1060,7 @@ void SMTEncoder::arrayIndexAssignment(Expression const& _expr, smt::Expression c
 			solAssert(symbArray, "");
 			toStore = smt::Expression::tuple_constructor(
 				smt::Expression(base->annotation().type),
-				{smt::Expression::store(symbArray->array(), expr(*indexAccess->indexExpression()), toStore), symbArray->length()}
+				{smt::Expression::store(symbArray->elements(), expr(*indexAccess->indexExpression()), toStore), symbArray->length()}
 			);
 			indexAccess = base;
 		}
@@ -1364,6 +1364,7 @@ void SMTEncoder::assignment(VariableDeclaration const& _variable, Expression con
 	// we should extract this into an `implicitConversion` function.
 	if (_variable.type()->category() != Type::Category::Array || _value.annotation().type->category() != Type::Category::StringLiteral)
 		assignment(_variable, expr(_value, _variable.type()));
+	// TODO else { store each string literal byte into the array }
 }
 
 void SMTEncoder::assignment(VariableDeclaration const& _variable, smt::Expression const& _value)
